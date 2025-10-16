@@ -1,25 +1,41 @@
 <?php
-require_once 'config/db.php';
-require_once 'app/controller/UserController.php';
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/app/controller/UserController.php';
+
+$conn = new mysqli('localhost', 'root', '', 'friendify_db');
+if ($conn->connect_error) {
+    die("Database connection failed: " . $conn->connect_error);
+}
+
+$controller = new UserController($conn);
 
 $page = $_GET['page'] ?? 'login';
-$controller = new UserController($conn);
 
 switch ($page) {
     case 'register':
-        include 'app/view/register.php';
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') $controller->register();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller->register();
+        } else {
+            include 'app/view/register.php';
+        }
         break;
+
     case 'login':
-        include 'app/view/login.php';
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') $controller->login();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller->login();
+        } else {
+            include 'app/view/login.php';
+        }
         break;
+
     case 'logout':
         $controller->logout();
         break;
+
     case 'feed':
         include 'app/view/feed.php';
         break;
+
     default:
         include 'app/view/login.php';
 }

@@ -4,4 +4,4 @@
     <input type="password" name="password" placeholder="Password" required>
     <button type="submit">Login</button>
 </form>
-<a href="index.php?page=register">Create account</a>
+<a href="index.php?page=register">Don't have an account? Create one here.</a>
