@@ -12,6 +12,9 @@ $user_id = $_SESSION['user_id'] ?? null;
 $posts = $postController->getAllPosts();
 ?>
 
+<!-- Include CSS -->
+<link rel="stylesheet" href="app/css/feed.css">
+
 <?php include 'post_form.php'; ?>
 
 <div id="feed-container">
@@ -20,24 +23,33 @@ $posts = $postController->getAllPosts();
             $likesCount = $postController->getLikesCount($post['post_id']);
             $userLiked = $postController->hasUserLiked($post['post_id'], $user_id);
         ?>
-        <div class="post" data-id="<?= $post['post_id'] ?>" 
-             style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;">
-             
+        <div class="post" data-id="<?= $post['post_id'] ?>">
+            
+            <!-- Username -->
             <p><strong><?= htmlspecialchars($post['username']) ?></strong></p>
+
+            <!-- Content -->
             <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
 
-            <?php foreach ($post['images'] as $img): ?>
-                <?php $src = 'data:' . $img['mime'] . ';base64,' . base64_encode($img['data']); ?>
-                <img src="<?= $src ?>" style="max-width:100%;border-radius:8px;margin-top:5px;">
-            <?php endforeach; ?>
+            <!-- Images with horizontal scroll -->
+            <?php if (!empty($post['images'])): ?>
+                <div class="post-images">
+                    <?php foreach ($post['images'] as $img): ?>
+                        <?php $src = 'data:' . $img['mime'] . ';base64,' . base64_encode($img['data']); ?>
+                        <img src="<?= $src ?>">
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
 
-            <button class="like-btn" data-post-id="<?= $post['post_id'] ?>" 
-                    style="background:none;border:none;cursor:pointer;font-size:16px;margin-top:8px;">
-                <span class="like-text"><?= $userLiked ? '💔 Unlike' : '❤️ Like' ?></span>
-                <span class="like-count-wrapper">(<span class="like-count"><?= $likesCount ?></span>)</span>
-            </button>
+            <!-- Footer: Posted on + Like button -->
+            <div class="post-footer">
+                <p>Posted on <?= $post['created_at'] ?></p>
+                <button class="like-btn" data-post-id="<?= $post['post_id'] ?>">
+                    <span class="like-text"><?= $userLiked ? '💔 Unlike' : '❤️ Like' ?></span>
+                    <span class="like-count-wrapper">(<span class="like-count"><?= $likesCount ?></span>)</span>
+                </button>
+            </div>
 
-            <p style="color:gray;font-size:12px;">Posted on <?= $post['created_at'] ?></p>
         </div>
     <?php endforeach; ?>
 </div>
@@ -71,5 +83,4 @@ document.querySelectorAll('.like-btn').forEach(btn => {
         }
     });
 });
-
 </script>

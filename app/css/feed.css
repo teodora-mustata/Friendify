@@ -1,0 +1,88 @@
+/* ------------------ Feed Container ------------------ */
+#feed-container {
+    max-width: 800px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+/* ------------------ Post ------------------ */
+.post {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    background-color: #fefefe;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+    /* Username */
+    .post p strong {
+        font-size: 16px;
+        color: #333;
+    }
+
+    /* Content */
+    .post p {
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 8px 0;
+    }
+
+/* ------------------ Images ------------------ */
+.post-images {
+    display: flex;
+    overflow-x: auto; /* scroll pe orizontala */
+    gap: 10px;
+    margin: 10px 0;
+    padding-bottom: 5px;
+}
+
+    .post-images img {
+        max-height: 150px;
+        border-radius: 8px;
+        flex-shrink: 0; /* nu se strâng la scroll */
+    }
+
+/* ------------------ Footer ------------------ */
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+    /* Posted on */
+    .post-footer p {
+        color: gray;
+        font-size: 12px;
+        margin: 0;
+    }
+
+/* Like button */
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+    .like-btn:hover {
+        opacity: 0.8;
+    }
+
+/* Scrollbar*/
+.post-images::-webkit-scrollbar {
+    height: 6px;
+}
+
+.post-images::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.post-images::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}

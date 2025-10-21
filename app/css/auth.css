@@ -1,0 +1,77 @@
+/* ------------------ Container ------------------ */
+.auth-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 25px 30px;
+    background-color: #f0f4ff; /* un albastru deschis */
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+    /* ------------------ Heading ------------------ */
+    .auth-container h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    /* ------------------ Inputs ------------------ */
+    .auth-container input[type="text"],
+    .auth-container input[type="email"],
+    .auth-container input[type="password"] {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        font-family: inherit;
+    }
+
+    /* Focus input */
+    .auth-container input:focus {
+        outline: none;
+        border-color: #4a90e2;
+        box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+    }
+
+    /* ------------------ Button ------------------ */
+    .auth-container button[type="submit"] {
+        background-color: #4a90e2;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 0;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+        .auth-container button[type="submit"]:hover {
+            background-color: #3b78c2;
+        }
+
+    /* ------------------ Links ------------------ */
+    .auth-container a {
+        text-align: center;
+        display: block;
+        margin-top: 10px;
+        color: #4a90e2;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+        .auth-container a:hover {
+            text-decoration: underline;
+        }
+
+/* Responsive */
+@media (max-width: 450px) {
+    .auth-container {
+        padding: 20px;
+        margin: 20px;
+    }
+}
