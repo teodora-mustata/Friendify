@@ -31,11 +31,10 @@ $posts = $postController->getAllPosts();
                 <img src="<?= $src ?>" style="max-width:100%;border-radius:8px;margin-top:5px;">
             <?php endforeach; ?>
 
-            <!-- Like / Unlike Button -->
             <button class="like-btn" data-post-id="<?= $post['post_id'] ?>" 
                     style="background:none;border:none;cursor:pointer;font-size:16px;margin-top:8px;">
                 <span class="like-text"><?= $userLiked ? '💔 Unlike' : '❤️ Like' ?></span>
-                (<span class="like-count"><?= $likesCount ?></span>)
+                <span class="like-count-wrapper">(<span class="like-count"><?= $likesCount ?></span>)</span>
             </button>
 
             <p style="color:gray;font-size:12px;">Posted on <?= $post['created_at'] ?></p>
@@ -58,15 +57,19 @@ document.querySelectorAll('.like-btn').forEach(btn => {
             });
 
             const data = await res.json();
+            console.log(data);
 
-            if(data.status){
-                btn.querySelector('.like-text').textContent = (data.status === 'liked' ? '💔 Unlike' : '❤️ Like');
-                btn.querySelector('.like-count').textContent = data.likes;
+            if (data.status && typeof data.likes !== 'undefined') {
+                const likeText = btn.querySelector('.like-text');
+                const likeCount = btn.querySelector('.like-count');
+
+                if (likeText) likeText.textContent = (data.status === 'liked' ? '💔 Unlike' : '❤️ Like');
+                if (likeCount) likeCount.textContent = data.likes;
             }
-
-        } catch(err){
+        } catch(err) {
             console.error('Error:', err);
         }
     });
 });
+
 </script>

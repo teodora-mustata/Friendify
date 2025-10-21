@@ -92,7 +92,7 @@ class Post {
             $stmt->execute();
             return 'liked';
         }
-}
+    }
 
     public function getLikesCount($post_id) {
         $stmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM likes WHERE post_id = ?");
