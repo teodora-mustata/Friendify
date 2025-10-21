@@ -1,30 +1,72 @@
-<form action="index.php?page=add_post" method="POST" enctype="multipart/form-data">
-    <textarea name="content" placeholder="What's on your mind?" required></textarea><br>
-    <input type="file" name="images[]" accept="image/*" multiple><br><br>
-    <button type="submit">Post</button>
-</form>
+﻿<?php
+session_start();
+require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../controller/PostController.php';
 
-<div class="posts">
-    <?php
-    require_once __DIR__ . '/../controller/PostController.php';
-    require_once __DIR__ . '/../../config/db.php';
+$conn = new mysqli('localhost', 'root', '', 'friendify_db');
+if ($conn->connect_error) die("DB failed: " . $conn->connect_error);
 
-    $conn = new mysqli('localhost', 'root', '', 'friendify_db');
-    $postController = new PostController($conn);
-    $posts = $postController->getAllPosts();
+$postController = new PostController($conn);
+$user_id = $_SESSION['user_id'] ?? null;
 
-    foreach ($posts as $post) {
-        echo '<div class="post">';
-        echo '<p><strong>' . htmlspecialchars($post['username']) . '</strong></p>';
-        echo '<p>' . nl2br(htmlspecialchars($post['content'])) . '</p>';
+$posts = $postController->getAllPosts();
+?>
 
-        foreach ($post['images'] as $img) {
-            $src = 'data:' . $img['mime'] . ';base64,' . base64_encode($img['data']);
-            echo '<img src="' . $src . '" style="max-width:100%;border-radius:8px;">';
-        }
+<?php include 'post_form.php'; ?>
 
-        echo '<p style="color:gray;font-size:12px;">Posted on ' . $post['created_at'] . '</p>';
-        echo '</div>';
-    }
-    ?>
+<div id="feed-container">
+    <?php foreach ($posts as $post): ?>
+        <?php
+            $likesCount = $postController->getLikesCount($post['post_id']);
+            $userLiked = $postController->hasUserLiked($post['post_id'], $user_id);
+        ?>
+        <div class="post" data-id="<?= $post['post_id'] ?>" 
+             style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;">
+             
+            <p><strong><?= htmlspecialchars($post['username']) ?></strong></p>
+            <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
+
+            <?php foreach ($post['images'] as $img): ?>
+                <?php $src = 'data:' . $img['mime'] . ';base64,' . base64_encode($img['data']); ?>
+                <img src="<?= $src ?>" style="max-width:100%;border-radius:8px;margin-top:5px;">
+            <?php endforeach; ?>
+
+            <!-- Like / Unlike Button -->
+            <button class="like-btn" data-post-id="<?= $post['post_id'] ?>" 
+                    style="background:none;border:none;cursor:pointer;font-size:16px;margin-top:8px;">
+                <span class="like-text"><?= $userLiked ? '💔 Unlike' : '❤️ Like' ?></span>
+                (<span class="like-count"><?= $likesCount ?></span>)
+            </button>
+
+            <p style="color:gray;font-size:12px;">Posted on <?= $post['created_at'] ?></p>
+        </div>
+    <?php endforeach; ?>
 </div>
+
+<script>
+document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', async e => {
+        e.preventDefault();
+        const postId = btn.dataset.postId;
+        const formData = new FormData();
+        formData.append('post_id', postId);
+
+        try {
+            const res = await fetch('app/ajax/toggle_like.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await res.json();
+
+            if(data.status){
+                btn.querySelector('.like-text').textContent = (data.status === 'liked' ? '💔 Unlike' : '❤️ Like');
+                btn.querySelector('.like-count').textContent = data.likes;
+            }
+
+        } catch(err){
+            console.error('Error:', err);
+        }
+    });
+});
+</script>

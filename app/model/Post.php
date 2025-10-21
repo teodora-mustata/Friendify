@@ -1,9 +1,13 @@
 ﻿<?php
+require_once __DIR__ . '/Image.php';
+
 class Post {
     private $conn;
+    private $imageModel;
 
     public function __construct($conn) {
         $this->conn = $conn;
+        $this->imageModel = new Image($conn);
     }
 
     public function createPost($user_id, $content, $images = []) {
@@ -13,25 +17,7 @@ class Post {
         $post_id = $this->conn->insert_id;
 
         foreach ($images as $img) {
-            $hash = hash('sha256', $img['data']);
-
-            $stmt_check = $this->conn->prepare("SELECT id FROM images WHERE hash = ?");
-            $stmt_check->bind_param("s", $hash);
-            $stmt_check->execute();
-            $result = $stmt_check->get_result();
-
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $image_id = $row['id'];
-            } else {
-                $stmt_img = $this->conn->prepare("INSERT INTO images (image, mime_type, hash) VALUES (?, ?, ?)");
-                $empty = "";
-                $mimeType = $img['mime'];
-                $stmt_img->bind_param("bss", $empty, $mimeType, $hash);
-                $stmt_img->send_long_data(0, $img['data']);
-                $stmt_img->execute();
-                $image_id = $this->conn->insert_id;
-            }
+            $image_id = $this->imageModel->saveImage($img['data'], $img['mime']);
 
             $stmt_link = $this->conn->prepare("INSERT INTO post_images (post_id, image_id) VALUES (?, ?)");
             $stmt_link->bind_param("ii", $post_id, $image_id);
@@ -41,8 +27,6 @@ class Post {
         return true;
     }
 
-
-
     public function getAllPosts() {
         $sql = "
             SELECT 
@@ -50,6 +34,7 @@ class Post {
                 posts.content,
                 posts.created_at,
                 users.username,
+                (SELECT COUNT(*) FROM likes WHERE post_id = posts.id) AS likes,
                 images.image,
                 images.mime_type
             FROM posts
@@ -59,6 +44,7 @@ class Post {
             ORDER BY posts.created_at DESC
         ";
 
+
         $result = $this->conn->query($sql);
         $posts = [];
 
@@ -66,9 +52,11 @@ class Post {
             $id = $row['post_id'];
             if (!isset($posts[$id])) {
                 $posts[$id] = [
+                    'post_id'   => $id,
                     'username' => $row['username'],
                     'content' => $row['content'],
                     'created_at' => $row['created_at'],
+                    'likes' => $row['likes'],
                     'images' => []
                 ];
             }
@@ -83,5 +71,36 @@ class Post {
 
         return $posts;
     }
+
+    public function hasUserLiked($post_id, $user_id) {
+    $stmt = $this->conn->prepare("SELECT id FROM likes WHERE post_id = ? AND user_id = ?");
+    $stmt->bind_param("ii", $post_id, $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->num_rows > 0;
+}
+
+    public function toggleLike($post_id, $user_id) {
+        if ($this->hasUserLiked($post_id, $user_id)) {
+            $stmt = $this->conn->prepare("DELETE FROM likes WHERE post_id = ? AND user_id = ?");
+            $stmt->bind_param("ii", $post_id, $user_id);
+            $stmt->execute();
+            return 'unliked';
+        } else {
+            $stmt = $this->conn->prepare("INSERT INTO likes (post_id, user_id, created_at) VALUES (?, ?, NOW())");
+            $stmt->bind_param("ii", $post_id, $user_id);
+            $stmt->execute();
+            return 'liked';
+        }
+}
+
+    public function getLikesCount($post_id) {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM likes WHERE post_id = ?");
+        $stmt->bind_param("i", $post_id);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        return $result['total'] ?? 0;
+    }
+
 }
 ?>

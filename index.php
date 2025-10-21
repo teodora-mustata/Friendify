@@ -1,7 +1,9 @@
 <?php
-require_once __DIR__ . '/config/db.php';
-require_once __DIR__ . '/app/controller/UserController.php';
+require_once __DIR__ . '/app/model/Image.php';
+require_once __DIR__ . '/app/model/Post.php';
 require_once __DIR__ . '/app/controller/PostController.php';
+require_once __DIR__ . '/app/controller/UserController.php';
+
 
 $conn = new mysqli('localhost', 'root', '', 'friendify_db');
 if ($conn->connect_error) {
@@ -41,6 +43,20 @@ switch ($page) {
         $postController = new PostController($conn);
         $postController->addPost();
         break;
+
+    case 'like_post':
+        $post_id = $_POST['post_id'] ?? null;
+        if ($post_id) {
+            $conn->query("UPDATE posts SET likes = likes + 1 WHERE id = $post_id");
+        }
+        header("Location: index.php?page=feed");
+        exit;
+
+    case 'toggle_like':
+        $postController = new PostController($conn);
+        $postController->toggleLike();
+        exit;
+
 
     default:
         include 'app/view/login.php';
