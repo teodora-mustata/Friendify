@@ -58,7 +58,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     .then(response => response.text())
     .then(data => {
         if(data.trim() === "success") {
-            window.location.href = "login.php";
+            window.location.href = "index.php?page=login";
         } else {
             document.getElementById('registerError').innerText = data;
         }

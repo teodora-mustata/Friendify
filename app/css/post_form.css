@@ -1,9 +1,8 @@
-/* ------------------ Form Container ------------------ */
 .post-form-container {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
-    background-color: #fff8e1; /* un galben deschis */
+    background-color: #fff8e1;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     font-family: Arial, sans-serif;
@@ -12,55 +11,63 @@
     gap: 15px;
 }
 
-    /* ------------------ Text ------------------ */
-    .post-form-container text {
-        width: 100%;
-        min-height: 100px;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        resize: vertical;
-        font-size: 14px;
-        font-family: inherit;
-    }
+.post-form-container textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    font-size: 14px;
+    font-family: inherit;
+}
 
-        .post-form-container text:focus {
-            outline: none;
-            border-color: #ff9800;
-            box-shadow: 0 0 5px rgba(255, 152, 0, 0.3);
-        }
+.post-form-container textarea:focus {
+    outline: none;
+    border-color: #ff9800;
+    box-shadow: 0 0 5px rgba(255, 152, 0, 0.3);
+}
 
-    /* ------------------ File Input ------------------ */
-    .post-form-container input[type="file"] {
-        font-size: 14px;
-    }
+.post-form-container input[type="file"] {
+    font-size: 14px;
+}
 
-    /* ------------------ Submit Button ------------------ */
-    .post-form-container button[type="submit"] {
-        background-color: #ff9800;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-        transition: background 0.3s;
-    }
+.post-form-container button[type="submit"] {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: background 0.3s;
+}
 
-        .post-form-container button[type="submit"]:hover {
-            background-color: #e68900;
-        }
+.post-form-container button[type="submit"]:hover {
+    background-color: #e68900;
+}
 
-        /* Optional: icon inside button */
-        .post-form-container button[type="submit"] i {
-            font-size: 18px;
-        }
+.post-form-container button[type="submit"] i {
+    font-size: 18px;
+}
 
-/* Responsive */
+.post-form-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.post-form-container input[type="file"] {
+    align-self: flex-start;
+    display: block;
+    margin-top: 5px;
+}
+
 @media (max-width: 650px) {
     .post-form-container {
         padding: 15px;

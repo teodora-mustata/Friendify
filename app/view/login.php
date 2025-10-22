@@ -48,7 +48,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     .then(response => response.text())
     .then(data => {
         if(data.trim() === "success") {
-            window.location.href = "feed.php";
+            window.location.href = "index.php?page=feed";
         } else {
             document.getElementById('loginError').innerText = data;
         }
