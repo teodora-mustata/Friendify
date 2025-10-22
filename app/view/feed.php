@@ -12,7 +12,6 @@ $user_id = $_SESSION['user_id'] ?? null;
 $posts = $postController->getAllPosts();
 ?>
 
-<!-- Include CSS -->
 <link rel="stylesheet" href="app/css/feed.css">
 
 <?php include 'post_form.php'; ?>
@@ -25,13 +24,10 @@ $posts = $postController->getAllPosts();
         ?>
         <div class="post" data-id="<?= $post['post_id'] ?>">
             
-            <!-- Username -->
             <p><strong><?= htmlspecialchars($post['username']) ?></strong></p>
 
-            <!-- Content -->
             <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
 
-            <!-- Images with horizontal scroll -->
             <?php if (!empty($post['images'])): ?>
                 <div class="post-images">
                     <?php foreach ($post['images'] as $img): ?>
@@ -41,7 +37,6 @@ $posts = $postController->getAllPosts();
                 </div>
             <?php endif; ?>
 
-            <!-- Footer: Posted on + Like button -->
             <div class="post-footer">
                 <p>Posted on <?= $post['created_at'] ?></p>
                 <button class="like-btn" data-post-id="<?= $post['post_id'] ?>">

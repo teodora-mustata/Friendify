@@ -2,10 +2,23 @@
 require_once __DIR__ . '/../model/User.php';
 
 class UserController {
-    private $userModel;
+    public $userModel;
 
     public function __construct($conn) {
         $this->userModel = new User($conn);
+    }
+
+    public function login() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = trim($_POST['username']);
+            $password = trim($_POST['password']);
+
+            if ($this->userModel->login($username, $password)) {
+                echo "success";
+            } else {
+                echo "Username and password don't match.";
+            }
+        }
     }
 
     public function register() {
@@ -16,34 +29,20 @@ class UserController {
             $password_confirm = trim($_POST['password_confirm']);
 
             if ($password !== $password_confirm) {
-                echo "<p>Passwords do not match.</p>";
+                echo "Passwords do not match.";
                 return;
             }
 
             $success = $this->userModel->register($username, $email, $password);
 
             if ($success) {
-                header("Location: index.php?page=login");
-                exit;
+                echo "success";
             } else {
-                echo "<p>Username or email already exists. Please choose another.</p>";
-            }
-        }
-}
-
-    public function login() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = trim($_POST['username']);
-            $password = trim($_POST['password']);
-
-            if ($this->userModel->login($username, $password)) {
-                header("Location: index.php?page=feed");
-                exit;
-            } else {
-                echo "<p>Username and password don't match. Please try again.</p>";
+                echo "Username or email already exists.";
             }
         }
     }
+
 
 
     public function logout() {
