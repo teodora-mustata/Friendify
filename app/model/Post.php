@@ -19,7 +19,7 @@ class Post {
         foreach ($images as $img) {
             $image_id = $this->imageModel->saveImage($img['data'], $img['mime']);
 
-            $stmt_link = $this->conn->prepare("INSERT INTO post_images (post_id, image_id) VALUES (?, ?)");
+            $stmt_link = $this->conn->prepare("INSERT IGNORE INTO post_images (post_id, image_id) VALUES (?, ?)");
             $stmt_link->bind_param("ii", $post_id, $image_id);
             $stmt_link->execute();
         }
@@ -100,6 +100,26 @@ class Post {
         $stmt->execute();
         $result = $stmt->get_result()->fetch_assoc();
         return $result['total'] ?? 0;
+    }
+
+    public function deletePost($post_id) {
+        $stmt_likes = $this->conn->prepare("DELETE FROM likes WHERE post_id = ?");
+        $stmt_likes->bind_param("i", $post_id);
+        $stmt_likes->execute();
+
+        $stmt_images = $this->conn->prepare("DELETE FROM post_images WHERE post_id = ?");
+        $stmt_images->bind_param("i", $post_id);
+        $stmt_images->execute();
+
+        $stmt_comments = $this->conn->prepare("DELETE FROM comments WHERE post_id = ?");
+        $stmt_comments->bind_param("i", $post_id);
+        $stmt_comments->execute();
+
+        $stmt_post = $this->conn->prepare("DELETE FROM posts WHERE id = ?");
+        $stmt_post->bind_param("i", $post_id);
+        $stmt_post->execute();
+
+        return true;
     }
 
 }
