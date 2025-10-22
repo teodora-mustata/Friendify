@@ -24,6 +24,10 @@ $posts = $postController->getAllPosts();
         ?>
         <div class="post" data-id="<?= $post['post_id'] ?>">
             
+            <?php if ($post['user_id'] == $user_id): ?>
+            <button class="delete-btn" data-post-id="<?= $post['post_id'] ?>">🗑️ Delete</button>
+            <?php endif; ?>
+
             <p><strong><?= htmlspecialchars($post['username']) ?></strong></p>
 
             <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
@@ -48,6 +52,7 @@ $posts = $postController->getAllPosts();
         </div>
     <?php endforeach; ?>
 </div>
+
 
 <script>
 document.querySelectorAll('.like-btn').forEach(btn => {
@@ -78,4 +83,33 @@ document.querySelectorAll('.like-btn').forEach(btn => {
         }
     });
 });
+
+document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async e => {
+        e.preventDefault();
+        const postId = btn.dataset.postId;
+
+        if (!confirm("Are you sure you want to delete this post?")) return;
+
+        const formData = new FormData();
+        formData.append('post_id', postId);
+
+        try {
+            const res = await fetch('app/ajax/delete_post.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await res.json();
+            if (data.status === 'success') {
+                btn.closest('.post').remove();
+            } else {
+                alert(data.message || 'Error deleting post');
+            }
+        } catch(err) {
+            console.error('Error:', err);
+        }
+    });
+});
+
 </script>

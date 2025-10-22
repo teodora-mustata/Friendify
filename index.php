@@ -61,4 +61,3 @@ switch ($page) {
     default:
         include 'app/view/login.php';
 }
-?>

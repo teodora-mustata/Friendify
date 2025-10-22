@@ -4,6 +4,7 @@ require_once __DIR__ . '/../model/Like.php';
 
 class PostController {
     private $postModel;
+    private $conn;
 
     public function __construct($conn) {
         $this->conn = $conn;      
@@ -71,6 +72,12 @@ class PostController {
         return $this->postModel->hasUserLiked($post_id, $user_id);
     }
 
+    public function getPostById($post_id) {
+        return $this->postModel->getPostById($post_id);
+    }
 
+    public function deletePost($post_id) {
+        return $this->postModel->deletePost($post_id);
+    }
 }
 ?>

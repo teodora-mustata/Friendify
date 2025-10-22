@@ -32,6 +32,7 @@ class Post {
             SELECT 
                 posts.id AS post_id,
                 posts.content,
+                posts.user_id,
                 posts.created_at,
                 users.username,
                 (SELECT COUNT(*) FROM likes WHERE post_id = posts.id) AS likes,
@@ -53,6 +54,7 @@ class Post {
             if (!isset($posts[$id])) {
                 $posts[$id] = [
                     'post_id'   => $id,
+                    'user_id'   => $row['user_id'],
                     'username' => $row['username'],
                     'content' => $row['content'],
                     'created_at' => $row['created_at'],
@@ -120,6 +122,14 @@ class Post {
         $stmt_post->execute();
 
         return true;
+    }
+
+    public function getPostById($post_id) {
+        $stmt = $this->conn->prepare("SELECT * FROM posts WHERE id = ?");
+        $stmt->bind_param("i", $post_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 
 }
