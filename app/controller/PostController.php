@@ -79,5 +79,13 @@ class PostController {
     public function deletePost($post_id) {
         return $this->postModel->deletePost($post_id);
     }
+
+    public function getCommentsCount($post_id){
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as c FROM comments WHERE post_id = ?");
+        $stmt->bind_param("i", $post_id);
+        $stmt->execute();
+        $res = $stmt->get_result()->fetch_assoc();
+        return $res['c'] ?? 0;
+    }
 }
 ?>
