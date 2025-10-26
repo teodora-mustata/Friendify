@@ -147,7 +147,7 @@ document.querySelectorAll('.see-comments-btn').forEach(btn => {
             const res = await fetch('app/ajax/get_comments.php?post_id=' + postId);
             const data = await res.json();
 
-            if(data.status === 'success'){
+            if (data.status === 'success') {
                 commentsList.innerHTML = '';
                 data.comments.forEach(c => {
                     const div = document.createElement('div');
@@ -155,16 +155,53 @@ document.querySelectorAll('.see-comments-btn').forEach(btn => {
                     div.style.display = 'flex';
                     div.style.justifyContent = 'space-between';
                     div.style.alignItems = 'center';
-                    div.innerHTML = `<span><strong>${c.username}:</strong> ${c.content}</span>
-                        ${c.user_id == <?= $user_id ?? 0 ?> ? '<button class="delete-comment" data-id="'+c.id+'">🗑️</button>' : ''}`;
+                    div.innerHTML = `
+                        <span><strong>${c.username}:</strong> ${c.content}</span>
+                        ${c.user_id == userId ? '<button class="delete-comment" data-id="'+c.id+'">🗑️</button>' : ''}
+                    `;
                     commentsList.appendChild(div);
                 });
+
+                commentsList.querySelectorAll('.delete-comment').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const commentId = btn.dataset.id;
+                        if (!confirm("Are you sure you want to delete this comment?")) return;
+
+                        const formData = new FormData();
+                        formData.append('comment_id', commentId);
+
+                        try {
+                            const res = await fetch('app/ajax/delete_comment.php', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            const data = await res.json();
+
+                            if (data.status === 'success') {
+                                btn.closest('.comment').remove();
+
+                                const postBtn = document.querySelector(`.see-comments-btn[data-post-id='${modalPostId.value}']`);
+                                if (postBtn) {
+                                    let current = parseInt(postBtn.textContent.match(/\d+/)?.[0] || 0);
+                                    postBtn.textContent = `💬 Comments (${current - 1})`;
+                                }
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (err) {
+                            console.error('Error deleting comment:', err);
+                        }
+                    });
+                });
+
             } else {
                 commentsList.innerHTML = `<p>${data.message}</p>`;
             }
 
             modal.style.display = 'block';
-        } catch(err) { console.error(err); }
+        } catch (err) {
+            console.error('Error loading comments:', err);
+        }
     });
 });
 
