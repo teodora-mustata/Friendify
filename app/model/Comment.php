@@ -1,10 +1,7 @@
 <?php
-class Comment {
-    private $conn;
+require_once 'Model.php';
 
-    public function __construct($conn) {
-        $this->conn = $conn;
-    }
+class Comment extends Model {
 
     public function addComment($post_id, $user_id, $content) {
         $stmt = $this->conn->prepare("INSERT INTO comments (post_id, user_id, content, created_at) VALUES (?, ?, ?, NOW())");

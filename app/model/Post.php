@@ -1,12 +1,12 @@
 ﻿<?php
-require_once __DIR__ . '/Image.php';
+require_once 'Image.php';
+require_once 'Model.php';
 
-class Post {
-    private $conn;
+class Post extends Model {
     private $imageModel;
 
     public function __construct($conn) {
-        $this->conn = $conn;
+        parent::__construct($conn);
         $this->imageModel = new Image($conn);
     }
 

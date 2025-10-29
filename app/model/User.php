@@ -1,14 +1,8 @@
 <?php
-require_once __DIR__ . '/../../config/db.php';
 require_once 'Authenticable.php';
+require_once 'Model.php';
 
-class User implements Authenticable {
-    private $conn;
-
-    public function __construct($conn) {
-        $this->conn = $conn;
-    }
-
+class User extends Model implements Authenticable {
     public function register($username, $email, $password) {
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
         $stmt->bind_param("ss", $username, $email);

@@ -1,10 +1,7 @@
 <?php
-class Like {
-    private $conn;
+require_once 'Model.php';
 
-    public function __construct($conn) {
-        $this->conn = $conn;
-    }
+class Like extends Model {
 
     public function hasUserLiked($post_id, $user_id) {
         $stmt = $this->conn->prepare("SELECT id FROM likes WHERE post_id = ? AND user_id = ?");

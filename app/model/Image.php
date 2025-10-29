@@ -1,10 +1,7 @@
 <?php
-class Image {
-    private $conn;
+require_once 'Model.php';
 
-    public function __construct($conn) {
-        $this->conn = $conn;
-    }
+class Image extends Model {
 
     public function saveImage($data, $mimeType) {
         $hash = hash('sha256', $data);
