@@ -139,3 +139,57 @@
     width: 100%;
     height: 60px;
 }
+
+@media (max-width: 600px) {
+    #feed-container {
+        max-width: 95%;
+        margin: 10px auto;
+        padding: 0 10px;
+    }
+
+    .post {
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+        .post p,
+        .post p strong {
+            font-size: 14px;
+        }
+
+    .post-images {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 8px;
+    }
+
+        .post-images img {
+            object-fit: cover;
+            width: auto;
+            height: 150px;
+        }
+
+    .post-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+        .post-footer p {
+            font-size: 11px;
+        }
+
+    .comments-content {
+        width: 90%;
+        margin: 10% auto;
+        padding: 15px;
+    }
+
+    .close-modal {
+        font-size: 20px;
+    }
+
+    #add-comment-form textarea {
+        height: 50px;
+    }
+}

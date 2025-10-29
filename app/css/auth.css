@@ -62,8 +62,22 @@
     }
 
 @media (max-width: 450px) {
-.auth-container {
-    padding: 20px;
-    margin: 20px;
-}
+    .auth-container {
+        max-width: 90%;
+        padding: 15px;
+        margin: 30px auto;
+    }
+
+        .auth-container h2 {
+            font-size: 18px;
+        }
+
+        .auth-container input,
+        .auth-container button {
+            font-size: 14px;
+        }
+
+        .auth-container button {
+            padding: 8px 0;
+        }
 }

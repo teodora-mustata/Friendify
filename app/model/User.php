@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'Authenticable.php';
 require_once 'Model.php';
 
@@ -8,12 +8,20 @@ class User extends Model implements Authenticable {
         $stmt->bind_param("ss", $username, $email);
         $stmt->execute();
         $result = $stmt->get_result();
-        if ($result->num_rows > 0) return false;
+
+        if ($result->num_rows > 0) {
+            throw new Exception("Username or email already exists!");
+        }
 
         $hashed = password_hash($password, PASSWORD_BCRYPT);
         $stmt = $this->conn->prepare("INSERT INTO users (username, email, password, created_at) VALUES (?, ?, ?, NOW())");
         $stmt->bind_param("sss", $username, $email, $hashed);
-        return $stmt->execute();
+
+        if (!$stmt->execute()) {
+            throw new Exception("Error while registering.");
+        }
+
+        return true;
     }
 
     public function login($username, $password) {

@@ -71,5 +71,25 @@
 @media (max-width: 650px) {
     .post-form-container {
         padding: 15px;
+        max-width: 90%;
+    }
+
+        .post-form-container textarea {
+            min-height: 80px;
+            font-size: 13px;
+        }
+
+        .post-form-container button[type="submit"] {
+            font-size: 14px;
+            padding: 8px 15px;
+        }
+
+        .post-form-container h2 {
+            font-size: 18px;
+            text-align: center;
+        }
+
+    input[type="file"] {
+        font-size: 13px;
     }
 }

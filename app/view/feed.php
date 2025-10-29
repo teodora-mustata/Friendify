@@ -14,6 +14,15 @@ $posts = $postController->getAllPosts();
 
 <link rel="stylesheet" href="app/css/feed.css">
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed</title>
+    <link rel="stylesheet" href="app/css/feed.css">
+</head>
+<body>
 <?php include 'post_form.php'; ?>
 
 <div id="feed-container">
@@ -70,9 +79,9 @@ $posts = $postController->getAllPosts();
             </form>
         </div>
     </div>
-
 </div>
-
+</body>
+</html>
 
 <script>
 document.querySelectorAll('.like-btn').forEach(btn => {
