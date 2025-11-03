@@ -1,6 +1,7 @@
 ﻿<?php
 require_once 'Authenticable.php';
 require_once 'Model.php';
+require_once 'UserException.php';
 
 class User extends Model implements Authenticable {
     public function register($username, $email, $password) {
@@ -10,7 +11,7 @@ class User extends Model implements Authenticable {
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
-            throw new Exception("Username or email already exists!");
+            throw new UserException("Username or email already exists!");
         }
 
         $hashed = password_hash($password, PASSWORD_BCRYPT);
@@ -18,7 +19,7 @@ class User extends Model implements Authenticable {
         $stmt->bind_param("sss", $username, $email, $hashed);
 
         if (!$stmt->execute()) {
-            throw new Exception("Error while registering.");
+            throw new UserException("Error while registering.");
         }
 
         return true;
