@@ -11,16 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password_confirm = trim($_POST['password_confirm']);
 
     if ($password !== $password_confirm) {
-        echo "Passwords do not match.";
-        exit;
+        $message = "Passwords do not match.";
+    } else {
+        try {
+            $success = $userController->userModel->register($username, $email, $password);
+
+            if ($success) {
+                $message = "Registered successfully! Please log in.";
+            }
+        } catch (UserException $e) {
+            $message = $e->getMessage();
+        } catch (Exception $e) {
+            $message = "Unexpected error. Please try again later.";
+        }
     }
 
-    $success = $userController->userModel->register($username, $email, $password);
-    if ($success) {
-        echo "success";
-    } else {
-        echo "Username or email already exists.";
-    }
+    echo htmlspecialchars($message);
     exit;
 }
 ?>

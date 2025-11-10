@@ -5,6 +5,14 @@ require_once __DIR__ . '/../../config/db.php';
 $userController = new UserController($conn);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    session_start();
+
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        http_response_code(403);
+        echo "Invalid CSRF token.";
+        exit;
+    }
+
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
@@ -15,6 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     exit;
 }
+
+
+session_start();
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h2>Authenticate</h2>
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
+        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
         <button type="submit">Login</button>
         <p id="loginError" style="color:red;"></p>
     </form>
