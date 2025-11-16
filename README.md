@@ -1,6 +1,6 @@
 # 🚀 Friendify
 
-A small social-media style web app where users can create posts, upload images, like posts and comment.  
+A social-media style web app where users can create posts, upload images, like posts and comment.  
 Built with **PHP (OOP + MVC)**, **MySQL** and tested with **PHPUnit**.
 
 ---
